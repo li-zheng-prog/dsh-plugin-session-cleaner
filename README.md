@@ -1,54 +1,49 @@
 # dsh-plugin-session-cleaner
 
-在 DeepSeek Harness 的侧栏里，手动、按精确会话 ID 永久删除已保存的会话。
+Manually and permanently delete saved sessions by exact session ID from the DeepSeek Harness sidebar.
 
-## 使用
+## Usage
 
-- 鼠标移到侧栏某条会话上，点击行尾的垃圾桶按钮。
-- 或点击侧栏顶部全局面板里的「会话清理」（垃圾桶图标，位于「自动化任务」下方）；
-  中间区域分别列出普通会话、子代理会话和工作区，点某一行行尾的垃圾桶打开确认对话框。
-- 移除工作区只删除 Harness 登记，保留磁盘文件和会话。删除子代理会话也会处理其下级子代理会话及保存在各自会话中的专属描述；共享配置不删除。
-- 对话框会显示会话名称和**完整会话 ID**；点击「永久删除」后执行删除，或在会话被占用时安排下次启动删除。
+- Hover over a session in the sidebar and click the trash button at the end of the row.
+- Alternatively, click **Session Cleaner** (the trash icon below **Automations**) in the global panel at the top of the sidebar. The main area lists regular sessions, subagent sessions, and workspaces separately. Click the trash button on a row to open a confirmation dialog.
+- Removing a workspace only removes its Harness registration; files on disk and sessions are preserved. Deleting a subagent session also handles its descendant subagent sessions and their session-specific descriptions; shared configuration is preserved.
+- The dialog displays the session name and **full session ID**. Click **Permanently Delete** to delete it, or schedule deletion for the next startup if the session is in use.
 
-删除内容：该会话的日志目录、投影缓存记录、工作区里的会话引用、置顶/归档记账。
-**不会**删除工作区文件、共享附件，也不会删除其他会话。
+Deletion removes the session's log directory, projection cache records, workspace session references, and pin/archive bookkeeping. It **does not** delete workspace files, shared attachments, or other sessions.
 
-## 已被本次运行打开的会话：下次启动时删除
+## Sessions opened during the current run
 
-Harness 0.2.1-rc.3 没有"关闭会话/释放 Agent"的接口，**本次运行中打开过的会话会被 Agent
-常驻持有直到进程退出**（切换对话不会释放）。因此这类会话无法在运行中安全删除。
+Harness 0.2.1-rc.3 has no API to close a session or release its agent. **Sessions opened during the current run remain held by the agent until the process exits**; switching conversations does not release them. Such sessions cannot be safely deleted while Harness is running.
 
-插件对此的处理：
+The plugin handles them as follows:
 
-1. 在确认对话框点击「永久删除」；如果该会话被本次运行持有，会自动写入待删除队列
-   `<DSH_HOME>/session-cleaner/pending.json`；
-2. 下次启动 Harness 时，插件在 Host 激活阶段（**Web 界面加载之前**）立即删除队列里的会话，
-   并等待删除完成才结束激活，因此桌面端"恢复上次打开的会话"来不及把它重新打开；若某个会话
-   仍被占用（例如另一个进程还在退出），会保留在队列里等下一次启动。
+1. Click **Permanently Delete** in the confirmation dialog. If the current run holds the session, it is automatically added to `<DSH_HOME>/session-cleaner/pending.json`.
+2. On the next Harness startup, the plugin deletes queued sessions during host activation, **before the web interface loads**, and waits for deletion to finish before activation completes. This prevents the desktop client from reopening them first when it restores the last opened session. If a session is still in use, for example by another process that is exiting, it remains queued for the next startup.
 
-> 为什么必须"立即"：桌面端启动后会按上次的选择恢复会话；会话一旦被恢复，Harness 就会在整个
-> 进程生命周期内持有它，删除一律被拒绝——而且每次启动都会重新恢复它，于是永远删不掉。
-> 因此删除必须在 Web 界面存在之前完成，不能等"启动完成后再删"。
+> Deletion must happen immediately during activation because the desktop client restores the previous selection after startup. Once restored, Harness holds the session for the lifetime of the process and rejects deletion. Waiting until startup finishes could therefore leave the session undeletable on every restart.
 
-从未在本次运行中打开过的会话（纯历史会话）会**立即删除**，不进队列。
+Sessions that have never been opened during the current run are **deleted immediately**, without entering the queue.
 
-## 安全边界
+## Safety boundaries
 
-- 只接受由本插件界面发起的、带确认头、JSON 请求体、精确 ID 二次确认的本机请求；跨站来源一律拒绝。
-- 删除前取得存储层的跨进程写锁（Windows 内核信号量），因此其他 Harness 进程正在写的会话不会被误删。
-- 正在运行的会话会被拒绝，且不会停止任何任务。
-- 普通会话删除不自动删除关联会话；子代理区域的删除包括其下级子代理会话。
-- 删除目录前校验路径必须形如 `<持久化根>/<项目键>/<会话ID>/`，并拒绝符号链接或越界路径。
+- Accepts only local requests initiated by the plugin interface, with a confirmation header, a JSON body, and a second confirmation of the exact ID. Cross-origin requests are rejected.
+- Acquires the storage layer's cross-process write lock (a Windows kernel semaphore) before deletion, preventing accidental deletion of sessions another Harness process is writing.
+- Rejects sessions that are running and does not stop any tasks.
+- Deleting a regular session does not automatically delete related sessions. Deleting a session from the subagent section includes its descendant subagent sessions.
+- Before deleting a directory, verifies that its path has the form `<storage-root>/<project-key>/<session-id>/` and rejects symbolic links and paths outside the expected root.
 
-## 已知限制
+## Known limitations
 
-- 打开过的会话只能在下次启动时删除，这是 Harness 运行时所有权限制；插件在 Host 激活阶段
-  （早于 Web 界面）完成删除。若本次启动时该会话仍被其他进程占用，会继续留在队列里等下一次启动。
-- 文件删除成功但缓存/记账清理失败时，会返回警告而不是假报失败；会话本身已经从磁盘删除。
-- 依赖当前 Harness 版本的 JSONL 持久化后端接口，升级 Harness 后需要重新验证。
+- Sessions opened during the current run can only be deleted on the next startup because of Harness runtime ownership. The plugin deletes them during host activation, before the web interface loads. Sessions still held by another process remain in the queue for a later startup.
+- If file deletion succeeds but cache or bookkeeping cleanup fails, the plugin returns a warning; the session itself has already been deleted from disk.
+- The plugin depends on the JSONL persistence backend interface of the current Harness version and must be revalidated after a Harness upgrade.
 
-## 安装
+## Installation
 
 ```powershell
-dsh plugin --profile desktop add .   # 或用插件管理器安装本目录
+dsh plugin --profile desktop add .   # Or install this directory using the plugin manager.
 ```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
