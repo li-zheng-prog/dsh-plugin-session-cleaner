@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Session Cleaner",
+    "description": "Delete saved sessions from the sidebar after an explicit confirmation; running sessions are never touched."
+  }
+}

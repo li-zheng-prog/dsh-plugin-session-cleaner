@@ -1,0 +1,4 @@
+# dsh-plugin-session-cleaner bundle layer: inserts the session-cleaner plugin row.
+- insert:
+    - id: session-cleaner
+      name: 'dsh-plugin-session-cleaner'
