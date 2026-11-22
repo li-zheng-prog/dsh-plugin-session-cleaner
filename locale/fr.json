@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Nettoyeur de séances",
+    "description": "Supprimez les séances enregistrées depuis la barre latérale après une confirmation explicite ; les séances en cours ne sont jamais touchées."
+  }
+}

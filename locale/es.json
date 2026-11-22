@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Limpiador de sesiones",
+    "description": "Elimine sesiones guardadas desde la barra lateral tras una confirmación explícita; las sesiones en ejecución nunca se tocan."
+  }
+}

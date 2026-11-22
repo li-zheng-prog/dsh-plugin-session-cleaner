@@ -5,11 +5,15 @@ Manually and permanently delete saved sessions by exact session ID from the Deep
 ## Usage
 
 - Hover over a session in the sidebar and click the trash button at the end of the row.
-- Alternatively, click **Session Cleaner** (the trash icon below **Automations**) in the global panel at the top of the sidebar. The main area lists regular sessions, subagent sessions, and workspaces separately. Click the trash button on a row to open a confirmation dialog.
+- Alternatively, click **Session cleaner** (the trash icon below **Automations**) in the global panel at the top of the sidebar. The main area lists regular sessions, subagent sessions, and workspaces separately. Click the trash button on a row to open a confirmation dialog.
 - Removing a workspace only removes its Harness registration; files on disk and sessions are preserved. Deleting a subagent session also handles its descendant subagent sessions and their session-specific descriptions; shared configuration is preserved.
 - The dialog displays the session name and **full session ID**. Click **Permanently Delete** to delete it, or schedule deletion for the next startup if the session is in use.
 
 Deletion removes the session's log directory, projection cache records, workspace session references, and pin/archive bookkeeping. It **does not** delete workspace files, shared attachments, or other sessions.
+
+## Language
+
+The plugin follows the Web client's language instead of the operating system or browser language: its copy is registered with DeepSeek Harness's locale service, so **Settings → General → Language** switches the plugin's titles, page, and dialogs together with the rest of the interface — including while a dialog is open. Dictionaries cover the languages Harness ships (English, Simplified Chinese, Japanese, Spanish, French, German, Russian, and Brazilian Portuguese), and the bundle title and description in Plugin Manager use the same set. If Harness adds a language these dictionaries lack, Harness's own fallback chain shows English for the plugin until a dictionary is added.
 
 ## Sessions opened during the current run
 

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Limpador de sessões",
+    "description": "Exclua sessões salvas na barra lateral após uma confirmação explícita; sessões em execução nunca são afetadas."
+  }
+}

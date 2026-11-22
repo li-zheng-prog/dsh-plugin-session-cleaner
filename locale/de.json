@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Sitzungsbereinigung",
+    "description": "Gespeicherte Sitzungen nach ausdrücklicher Bestätigung aus der Seitenleiste löschen; laufende Sitzungen werden nie angefasst."
+  }
+}

@@ -180,13 +180,244 @@ window.__ModuleLoader__.load({
       'error.unavailable': 'Session persistence is unavailable in this profile.',
       'error.generic': 'The deletion failed.',
     }
+    /**
+     * The remaining dictionaries DeepSeek Harness ships. Registering the same
+     * set keeps this plugin's copy in the language the Web client runs in;
+     * nothing here decides the language, `ctx.locale` does.
+     */
+    const JA = {
+      'row.delete': 'セッションを削除',
+      'panel.title': 'セッションクリーナー',
+      'page.listTitle': '削除できるセッション',
+      'page.count': '全 {count} 件',
+      'page.sessions': 'セッション',
+      'page.subagents': 'サブエージェントのセッション',
+      'page.workspaces': 'ワークスペース',
+      'page.empty': '記録はありません',
+      'page.loadError': 'カテゴリを読み込めませんでした。もう一度お試しください。',
+      'dialog.workspaceTitle': 'ワークスペースを削除',
+      'dialog.workspaceWarning': 'ワークスペースの登録のみを削除します。ファイルとセッションは残ります。',
+      'dialog.workspaceConfirm': 'ワークスペースを削除',
+      'dialog.subagentWarning': 'このサブエージェントとその配下のセッション、セッション内の専用記述を削除します。元に戻せません。開いているセッションは次回起動時に削除されます。',
+      'dialog.subagentResult': 'サブエージェントのクリーンアップ結果：',
+      'dialog.subagentQueued': '{count} 件のセッションを次回起動時に削除するよう予約しました。',
+      'dialog.title': 'セッションを削除',
+      'dialog.warning': '削除は元に戻せません。開いているセッションは次回起動時に削除されます。実行中のセッションは先にタスクを停止してください。',
+      'dialog.untitled': '無題のセッション',
+      'dialog.running': '実行中',
+      'dialog.cancel': 'キャンセル',
+      'dialog.confirm': '完全に削除',
+      'dialog.busy': '削除中…',
+      'dialog.queue': '次回の DeepSeek Harness 起動時に削除',
+      'dialog.queued': '削除待ちキューに追加しました。次回 Harness 起動時に、このセッションのログ、キャッシュ記録、ワークスペース参照が自動的に削除されます。',
+      'dialog.warningTitle': 'セッションは削除されましたが、次の後処理記録が残っています：',
+      'dialog.close': '閉じる',
+      'error.running': 'このセッションは実行中です。先にタスクを停止してください。このプラグインがタスクを停止することはありません。',
+      'error.held': 'このセッションは今回の実行中に開かれました。Harness は終了までセッションを保持するため、実行中は削除できません。下のボタンで次回起動時の削除を予約できます。',
+      'error.owned': '別の Harness ランタイムがこのセッションに書き込んでいます。そのランタイムを終了してから再試行してください。',
+      'error.notFound': 'セッションが存在しないか、すでに削除されています。',
+      'error.changed': '削除中にセッションが変更されました。ダイアログを閉じて再試行してください。',
+      'error.unsupported': '現在のセッションストアでは安全に削除できません。',
+      'error.filesBusy': 'Windows がセッションのファイル削除を拒否しました。使用中のプログラムを閉じて再試行してください。',
+      'error.files': 'セッションファイルを削除できませんでした。キャッシュと記録は未処理のままです。',
+      'error.unavailable': '現在の構成ではセッションの永続化を利用できません。',
+      'error.generic': '削除に失敗しました。',
+    }
+    const ES = {
+      'row.delete': 'Eliminar sesión',
+      'panel.title': 'Limpiador de sesiones',
+      'page.listTitle': 'Sesiones que puede eliminar',
+      'page.count': '{count} en total',
+      'page.sessions': 'Sesiones',
+      'page.subagents': 'Sesiones de subagente',
+      'page.workspaces': 'Espacios de trabajo',
+      'page.empty': 'Sin registros',
+      'page.loadError': 'No se pudieron cargar las categorías. Vuelva a intentarlo.',
+      'dialog.workspaceTitle': 'Quitar espacio de trabajo',
+      'dialog.workspaceWarning': 'Solo se quita el registro del espacio de trabajo. Los archivos y las sesiones se conservan.',
+      'dialog.workspaceConfirm': 'Quitar espacio de trabajo',
+      'dialog.subagentWarning': 'Se eliminarán este subagente, sus sesiones dependientes y sus descripciones específicas. No se puede deshacer. Las sesiones abiertas se eliminarán en el próximo inicio.',
+      'dialog.subagentResult': 'Resultado de la limpieza del subagente:',
+      'dialog.subagentQueued': '{count} sesiones están en cola para eliminarse en el próximo inicio.',
+      'dialog.title': 'Eliminar sesión',
+      'dialog.warning': 'La eliminación no se puede deshacer. Las sesiones abiertas se eliminarán en el próximo inicio; detenga antes las tareas en ejecución.',
+      'dialog.untitled': 'Sesión sin título',
+      'dialog.running': 'En ejecución',
+      'dialog.cancel': 'Cancelar',
+      'dialog.confirm': 'Eliminar permanentemente',
+      'dialog.busy': 'Eliminando…',
+      'dialog.queue': 'Eliminar en el próximo inicio de DeepSeek Harness',
+      'dialog.queued': 'En cola para eliminación. El registro de la sesión, la entrada de caché y las referencias del espacio de trabajo se eliminarán automáticamente la próxima vez que se inicie Harness.',
+      'dialog.warningTitle': 'La sesión se eliminó, pero estos registros de limpieza fallaron:',
+      'dialog.close': 'Cerrar',
+      'error.running': 'Esta sesión está en ejecución. Detenga primero su tarea; el limpiador nunca detiene el trabajo.',
+      'error.held': 'Esta sesión se abrió durante la ejecución actual y Harness la mantiene activa hasta que termine, así que no se puede eliminar ahora. Use el botón de abajo para programar su eliminación en el próximo inicio.',
+      'error.owned': 'Otro entorno de ejecución de Harness está escribiendo esta sesión; ciérrelo y vuelva a intentarlo.',
+      'error.notFound': 'La sesión no existe o ya se ha eliminado.',
+      'error.changed': 'La sesión cambió mientras se eliminaba; cierre el diálogo y vuelva a intentarlo.',
+      'error.unsupported': 'El almacén de sesiones actual no permite eliminar de forma segura.',
+      'error.filesBusy': 'Windows rechazó eliminar los archivos de la sesión; cierre lo que los esté usando y vuelva a intentarlo.',
+      'error.files': 'No se pudieron eliminar los archivos de la sesión; la caché y los registros quedaron intactos.',
+      'error.unavailable': 'La persistencia de sesiones no está disponible en este perfil.',
+      'error.generic': 'La eliminación falló.',
+    }
+    const FR = {
+      'row.delete': 'Supprimer la séance',
+      'panel.title': 'Nettoyeur de séances',
+      'page.listTitle': 'Séances que vous pouvez supprimer',
+      'page.count': '{count} au total',
+      'page.sessions': 'Séances',
+      'page.subagents': 'Séances de sous-agent',
+      'page.workspaces': 'Espaces de travail',
+      'page.empty': 'Aucune entrée',
+      'page.loadError': 'Impossible de charger les catégories. Veuillez réessayer.',
+      'dialog.workspaceTitle': 'Retirer l’espace de travail',
+      'dialog.workspaceWarning': 'Seul l’enregistrement de l’espace de travail est retiré. Les fichiers et les séances sont conservés.',
+      'dialog.workspaceConfirm': 'Retirer l’espace de travail',
+      'dialog.subagentWarning': 'Cette action supprime ce sous-agent, ses séances dépendantes et leurs descriptions intégrées. Elle est irréversible. Les séances ouvertes seront supprimées au prochain démarrage.',
+      'dialog.subagentResult': 'Résultat du nettoyage du sous-agent :',
+      'dialog.subagentQueued': '{count} séances sont en attente de suppression au prochain démarrage.',
+      'dialog.title': 'Supprimer la séance',
+      'dialog.warning': 'La suppression est irréversible. Les séances ouvertes seront supprimées au prochain démarrage ; arrêtez d’abord les tâches en cours.',
+      'dialog.untitled': 'Séance sans titre',
+      'dialog.running': 'En cours',
+      'dialog.cancel': 'Annuler',
+      'dialog.confirm': 'Supprimer définitivement',
+      'dialog.busy': 'Suppression…',
+      'dialog.queue': 'Supprimer au prochain démarrage de DeepSeek Harness',
+      'dialog.queued': 'En attente de suppression. Le journal de la séance, l’entrée de cache et les références de l’espace de travail seront supprimés automatiquement au prochain démarrage de Harness.',
+      'dialog.warningTitle': 'La séance a été supprimée, mais ces enregistrements de nettoyage ont échoué :',
+      'dialog.close': 'Fermer',
+      'error.running': 'Cette séance est en cours. Arrêtez d’abord sa tâche ; le nettoyeur n’arrête jamais le travail.',
+      'error.held': 'Cette séance a été ouverte pendant l’exécution en cours et Harness la maintient active jusqu’à sa fermeture ; elle ne peut donc pas être supprimée maintenant. Utilisez le bouton ci-dessous pour planifier sa suppression au prochain démarrage.',
+      'error.owned': 'Un autre environnement d’exécution Harness écrit dans cette séance ; fermez-le et réessayez.',
+      'error.notFound': 'La séance n’existe pas ou a déjà été supprimée.',
+      'error.changed': 'La séance a changé pendant sa suppression ; fermez la boîte de dialogue et réessayez.',
+      'error.unsupported': 'Le stockage de séances actuel ne permet pas une suppression sûre.',
+      'error.filesBusy': 'Windows a refusé de supprimer les fichiers de la séance ; fermez ce qui les utilise et réessayez.',
+      'error.files': 'Les fichiers de la séance n’ont pas pu être supprimés ; le cache et la comptabilité n’ont pas été modifiés.',
+      'error.unavailable': 'La persistance des séances n’est pas disponible dans ce profil.',
+      'error.generic': 'La suppression a échoué.',
+    }
+    const DE = {
+      'row.delete': 'Sitzung löschen',
+      'panel.title': 'Sitzungsbereinigung',
+      'page.listTitle': 'Löschbare Sitzungen',
+      'page.count': '{count} insgesamt',
+      'page.sessions': 'Sitzungen',
+      'page.subagents': 'Subagenten-Sitzungen',
+      'page.workspaces': 'Arbeitsbereiche',
+      'page.empty': 'Keine Einträge',
+      'page.loadError': 'Kategorien konnten nicht geladen werden. Bitte erneut versuchen.',
+      'dialog.workspaceTitle': 'Arbeitsbereich entfernen',
+      'dialog.workspaceWarning': 'Nur die Registrierung des Arbeitsbereichs wird entfernt. Dateien und Sitzungen bleiben erhalten.',
+      'dialog.workspaceConfirm': 'Arbeitsbereich entfernen',
+      'dialog.subagentWarning': 'Dies löscht diesen Subagenten, seine untergeordneten Sitzungen und deren eingebettete Beschreibungen. Das kann nicht rückgängig gemacht werden. Geöffnete Sitzungen werden beim nächsten Start gelöscht.',
+      'dialog.subagentResult': 'Ergebnis der Subagenten-Bereinigung:',
+      'dialog.subagentQueued': '{count} Sitzungen sind für das Löschen beim nächsten Start vorgemerkt.',
+      'dialog.title': 'Sitzung löschen',
+      'dialog.warning': 'Das Löschen kann nicht rückgängig gemacht werden. Geöffnete Sitzungen werden beim nächsten Start gelöscht; stoppen Sie zuerst laufende Aufgaben.',
+      'dialog.untitled': 'Unbenannte Sitzung',
+      'dialog.running': 'Läuft',
+      'dialog.cancel': 'Abbrechen',
+      'dialog.confirm': 'Endgültig löschen',
+      'dialog.busy': 'Wird gelöscht…',
+      'dialog.queue': 'Beim nächsten Start von DeepSeek Harness löschen',
+      'dialog.queued': 'Zum Löschen vorgemerkt. Sitzungsprotokoll, Cache-Eintrag und Arbeitsbereichsverweise werden beim nächsten Start von Harness automatisch gelöscht.',
+      'dialog.warningTitle': 'Die Sitzung wurde gelöscht, aber diese Aufräumeinträge sind fehlgeschlagen:',
+      'dialog.close': 'Schließen',
+      'error.running': 'Diese Sitzung läuft. Stoppen Sie zuerst ihre Aufgabe; die Bereinigung stoppt nie Arbeit.',
+      'error.held': 'Diese Sitzung wurde während des aktuellen Laufs geöffnet, und Harness hält sie bis zum Beenden aktiv, daher kann sie jetzt nicht gelöscht werden. Verwenden Sie die Schaltfläche unten, um das Löschen beim nächsten Start zu planen.',
+      'error.owned': 'Eine andere Harness-Instanz schreibt in diese Sitzung; schließen Sie sie und versuchen Sie es erneut.',
+      'error.notFound': 'Die Sitzung existiert nicht oder wurde bereits gelöscht.',
+      'error.changed': 'Die Sitzung hat sich während des Löschens geändert; schließen Sie den Dialog und versuchen Sie es erneut.',
+      'error.unsupported': 'Der aktuelle Sitzungsspeicher kann nicht sicher löschen.',
+      'error.filesBusy': 'Windows hat das Entfernen der Sitzungsdateien abgelehnt; schließen Sie alle Programme, die sie verwenden, und versuchen Sie es erneut.',
+      'error.files': 'Die Sitzungsdateien konnten nicht entfernt werden; Cache und Buchführung blieben unverändert.',
+      'error.unavailable': 'Die Sitzungspersistenz ist in diesem Profil nicht verfügbar.',
+      'error.generic': 'Das Löschen ist fehlgeschlagen.',
+    }
+    const RU = {
+      'row.delete': 'Удалить сеанс',
+      'panel.title': 'Очистка сеансов',
+      'page.listTitle': 'Сеансы, которые можно удалить',
+      'page.count': 'Всего: {count}',
+      'page.sessions': 'Сеансы',
+      'page.subagents': 'Сеансы субагентов',
+      'page.workspaces': 'Рабочие области',
+      'page.empty': 'Нет записей',
+      'page.loadError': 'Не удалось загрузить категории. Повторите попытку.',
+      'dialog.workspaceTitle': 'Удалить рабочую область',
+      'dialog.workspaceWarning': 'Удаляется только запись рабочей области. Файлы и сеансы сохраняются.',
+      'dialog.workspaceConfirm': 'Удалить рабочую область',
+      'dialog.subagentWarning': 'Будут удалены этот субагент, его дочерние сеансы и их встроенные описания. Отменить это нельзя. Открытые сеансы будут удалены при следующем запуске.',
+      'dialog.subagentResult': 'Результат очистки субагента:',
+      'dialog.subagentQueued': 'Сеансов в очереди на удаление при следующем запуске: {count}.',
+      'dialog.title': 'Удалить сеанс',
+      'dialog.warning': 'Удаление нельзя отменить. Открытые сеансы будут удалены при следующем запуске; сначала остановите выполняющиеся задачи.',
+      'dialog.untitled': 'Сеанс без названия',
+      'dialog.running': 'Выполняется',
+      'dialog.cancel': 'Отмена',
+      'dialog.confirm': 'Удалить навсегда',
+      'dialog.busy': 'Удаление…',
+      'dialog.queue': 'Удалить при следующем запуске DeepSeek Harness',
+      'dialog.queued': 'Добавлено в очередь на удаление. Журнал сеанса, запись кэша и ссылки рабочей области будут удалены автоматически при следующем запуске Harness.',
+      'dialog.warningTitle': 'Сеанс удалён, но следующие записи очистки не удалены:',
+      'dialog.close': 'Закрыть',
+      'error.running': 'Этот сеанс выполняется. Сначала остановите его задачу; очистка никогда не останавливает работу.',
+      'error.held': 'Этот сеанс был открыт во время текущего запуска, и Harness держит его активным до выхода, поэтому сейчас его нельзя удалить. Используйте кнопку ниже, чтобы запланировать удаление при следующем запуске.',
+      'error.owned': 'Другой процесс Harness записывает этот сеанс; закройте его и повторите попытку.',
+      'error.notFound': 'Сеанс не существует или уже удалён.',
+      'error.changed': 'Сеанс изменился во время удаления; закройте диалог и повторите попытку.',
+      'error.unsupported': 'Текущее хранилище сеансов не поддерживает безопасное удаление.',
+      'error.filesBusy': 'Windows отказался удалять файлы сеанса; закройте использующие их программы и повторите попытку.',
+      'error.files': 'Не удалось удалить файлы сеанса; кэш и учётные записи не изменены.',
+      'error.unavailable': 'Хранение сеансов недоступно в этом профиле.',
+      'error.generic': 'Не удалось удалить.',
+    }
+    const PT = {
+      'row.delete': 'Excluir sessão',
+      'panel.title': 'Limpador de sessões',
+      'page.listTitle': 'Sessões que você pode excluir',
+      'page.count': '{count} no total',
+      'page.sessions': 'Sessões',
+      'page.subagents': 'Sessões de subagente',
+      'page.workspaces': 'Espaços de trabalho',
+      'page.empty': 'Nenhum registro',
+      'page.loadError': 'Não foi possível carregar as categorias. Tente novamente.',
+      'dialog.workspaceTitle': 'Remover espaço de trabalho',
+      'dialog.workspaceWarning': 'Apenas o registro do espaço de trabalho é removido. Os arquivos e as sessões são mantidos.',
+      'dialog.workspaceConfirm': 'Remover espaço de trabalho',
+      'dialog.subagentWarning': 'Isso exclui este subagente, suas sessões descendentes e suas descrições incorporadas. Não pode ser desfeito. Sessões abertas serão excluídas na próxima inicialização.',
+      'dialog.subagentResult': 'Resultado da limpeza do subagente:',
+      'dialog.subagentQueued': '{count} sessões estão na fila para exclusão na próxima inicialização.',
+      'dialog.title': 'Excluir sessão',
+      'dialog.warning': 'A exclusão não pode ser desfeita. Sessões abertas serão excluídas na próxima inicialização; pare as tarefas em execução primeiro.',
+      'dialog.untitled': 'Sessão sem título',
+      'dialog.running': 'Em execução',
+      'dialog.cancel': 'Cancelar',
+      'dialog.confirm': 'Excluir permanentemente',
+      'dialog.busy': 'Excluindo…',
+      'dialog.queue': 'Excluir na próxima inicialização do DeepSeek Harness',
+      'dialog.queued': 'Na fila para exclusão. O log da sessão, o registro de cache e as referências do espaço de trabalho serão excluídos automaticamente na próxima inicialização do Harness.',
+      'dialog.warningTitle': 'A sessão foi excluída, mas estes registros de limpeza falharam:',
+      'dialog.close': 'Fechar',
+      'error.running': 'Esta sessão está em execução. Pare a tarefa dela primeiro; o limpador nunca para o trabalho.',
+      'error.held': 'Esta sessão foi aberta durante a execução atual e o Harness a mantém ativa até encerrar, então ela não pode ser excluída agora. Use o botão abaixo para agendar a exclusão na próxima inicialização.',
+      'error.owned': 'Outra instância do Harness está gravando nesta sessão; feche-a e tente novamente.',
+      'error.notFound': 'A sessão não existe ou já foi excluída.',
+      'error.changed': 'A sessão mudou enquanto estava sendo excluída; feche a caixa de diálogo e tente novamente.',
+      'error.unsupported': 'O armazenamento de sessões atual não permite exclusão segura.',
+      'error.filesBusy': 'O Windows recusou remover os arquivos da sessão; feche o que estiver usando-os e tente novamente.',
+      'error.files': 'Não foi possível remover os arquivos da sessão; o cache e os registros contábeis ficaram intactos.',
+      'error.unavailable': 'A persistência de sessões não está disponível neste perfil.',
+      'error.generic': 'A exclusão falhou.',
+    }
     const CODE_KEYS = {
       'running': 'error.running',
       'held': 'error.held',
       'owned': 'error.owned',
       'not-found': 'error.notFound',
-      'lineage': 'error.lineage',
-      'children': 'error.children',
       'changed': 'error.changed',
       'unsupported': 'error.unsupported',
       'files-busy': 'error.filesBusy',
@@ -194,7 +425,6 @@ window.__ModuleLoader__.load({
       'unavailable': 'error.unavailable',
     }
 
-    let locale
     let sessionsService
     let request = null
     let token = 0
@@ -222,25 +452,14 @@ window.__ModuleLoader__.load({
       notify()
     }
 
-    function t(key, params) {
-      let text
-      if (locale !== undefined && locale !== null && typeof locale.translate === 'function') {
-        try {
-          text = locale.translate(NS, key, params)
-        } catch {
-          text = undefined
-        }
-      }
-      if (typeof text !== 'string' || text === key) {
-        const language = typeof navigator !== 'undefined' && typeof navigator.language === 'string' ? navigator.language : 'en'
-        const dict = language.toLowerCase().startsWith('zh') ? ZH : EN
-        text = dict[key] ?? EN[key] ?? key
-      }
-      if (params !== undefined && typeof text === 'string') {
-        text = text.replace(/\{(\w+)\}/g, (match, name) => (name in params ? String(params[name]) : match))
-      }
-      return text
-    }
+    /**
+     * Translate entry for every surface. `apply` replaces this placeholder with
+     * the locale service's namespace-bound function, so each call reads the
+     * language the Web client is currently in — the same one its own copy uses,
+     * including after Settings → General → Language switches it live. Nothing
+     * here inspects the browser or OS language.
+     */
+    let t = key => key
 
     /** Inject this module's stylesheet once per page; the effect removes it on unload. */
     function ensureStyles() {
@@ -486,7 +705,9 @@ window.__ModuleLoader__.load({
       const workspace = openRequest.mode === 'workspace'
       const subagent = openRequest.mode === 'subagent'
       const [busy, setBusy] = useState(false)
-      const [errorText, setErrorText] = useState(null)
+      // Kept as a translation key (or verbatim Host text) rather than rendered
+      // copy, so a language switch while the dialog is open re-translates it.
+      const [error, setError] = useState(null)
       const [warnings, setWarnings] = useState(null)
       const [finished, setFinished] = useState(false)
       const [queued, setQueued] = useState(false)
@@ -521,7 +742,7 @@ window.__ModuleLoader__.load({
         if (submitting.current || selectedId === '' || running) return
         submitting.current = true
         setBusy(true)
-        setErrorText(null)
+        setError(null)
         try {
           const response = await fetch(workspace ? WORKSPACE_ROUTE : subagent ? SUBAGENT_ROUTE : ROUTE, {
             method: 'POST',
@@ -540,8 +761,8 @@ window.__ModuleLoader__.load({
             if (workspace) { closeDialog(); return }
             if (subagent) {
               refreshList(selectedId)
-              const resultWarnings = Array.isArray(payload.warnings) ? [...payload.warnings] : []
-              if (payload.queuedCount > 0) resultWarnings.unshift(t('dialog.subagentQueued', { count: payload.queuedCount }))
+              const resultWarnings = Array.isArray(payload.warnings) ? payload.warnings.map(text => ({ text: String(text) })) : []
+              if (payload.queuedCount > 0) resultWarnings.unshift({ key: 'dialog.subagentQueued', params: { count: payload.queuedCount } })
               if (resultWarnings.length) setWarnings(resultWarnings)
               else closeDialog()
               return
@@ -552,7 +773,7 @@ window.__ModuleLoader__.load({
             }
             refreshList(selectedId)
             if (Array.isArray(payload.warnings) && payload.warnings.length > 0) {
-              setWarnings(payload.warnings)
+              setWarnings(payload.warnings.map(text => ({ text: String(text) })))
               setBusy(false)
             } else {
               closeDialog()
@@ -561,11 +782,11 @@ window.__ModuleLoader__.load({
           }
           const code = payload !== null && typeof payload.code === 'string' ? payload.code : null
           const mapped = code === null ? undefined : CODE_KEYS[code]
-          let message = mapped === undefined ? null : t(mapped)
-          if (message === null || message === mapped) message = payload?.error || t('error.generic')
-          setErrorText(message)
+          if (mapped !== undefined) setError({ key: mapped })
+          else if (typeof payload?.error === 'string' && payload.error !== '') setError({ text: payload.error })
+          else setError({ key: 'error.generic' })
         } catch (reason) {
-          setErrorText(reason instanceof Error ? reason.message : String(reason))
+          setError({ text: reason instanceof Error ? reason.message : String(reason) })
         } finally {
           submitting.current = false
           setBusy(false)
@@ -599,7 +820,7 @@ window.__ModuleLoader__.load({
             footer: h('button', { type: 'button', className: 'dsc-button dsc-button-outline dsc-action', onClick: close }, t('dialog.close')),
           },
           h('p', { className: 'dsc-description' }, t(subagent ? 'dialog.subagentResult' : 'dialog.warningTitle')),
-          h('div', { className: 'dsc-body' }, h('ul', { className: 'dsc-warning-list' }, warnings.map((warning, index) => h('li', { key: index }, String(warning))))),
+          h('div', { className: 'dsc-body' }, h('ul', { className: 'dsc-warning-list' }, warnings.map((entry, index) => h('li', { key: index }, entry.key === undefined ? String(entry.text) : t(entry.key, entry.params))))),
         )
       }
 
@@ -641,7 +862,7 @@ window.__ModuleLoader__.load({
                   running ? h('span', { className: 'dsc-option-badge' }, t('dialog.running')) : null,
                 ),
               ),
-          errorText === null ? null : h('p', { className: 'dsc-error', role: 'alert' }, errorText),
+          error === null ? null : h('p', { className: 'dsc-error', role: 'alert' }, error.key === undefined ? String(error.text) : t(error.key, error.params)),
         ),
       )
     }
@@ -657,14 +878,18 @@ window.__ModuleLoader__.load({
     function apply(ctx) {
       if (registered) return
       registered = true
-      locale = ctx.get?.('locale')
       sessionsService = ctx.sessions
+      // `locale` is a required inject, so the service is mounted before this
+      // body runs. Registering every language Harness ships keeps the copy in
+      // the active one instead of falling back to English under a non-English UI.
+      ctx.effect(
+        () => ctx.locale.register(NS, { zh: ZH, en: EN, ja: JA, es: ES, fr: FR, de: DE, ru: RU, pt: PT }),
+        'session-cleaner.locale',
+      )
+      t = ctx.locale.bind(NS)
       ctx.effect(() => ensureStyles(), 'session-cleaner.styles')
-      if (typeof locale?.register === 'function') {
-        ctx.effect(() => locale.register(NS, { zh: ZH, en: EN }), 'session-cleaner.locale')
-      }
       ctx.slots.inject('sidebar.workspaces.session.row.action', () =>
-        ctx.slots.register({ name: 'sidebar.workspaces.session.row.action', id: 'session-cleaner-row', order: 400 }, DeleteSessionRowAction),
+        ctx.slots.register({ name: 'sidebar.workspaces.session.row.action', id: 'session-cleaner-row', order: 400, locale: NS }, DeleteSessionRowAction),
       )
       ctx.slots.inject('main', () =>
         ctx.slots.register({ name: 'main', key: PANEL_ID, locale: NS }, SessionCleanerPage),
@@ -673,10 +898,10 @@ window.__ModuleLoader__.load({
         ctx.slots.register({ name: 'sidebar.panellist', id: PANEL_ID, order: 20, locale: NS, label: () => t('panel.title') }, SessionCleanerPanelIcon),
       )
       ctx.slots.inject('shell.overlay', () =>
-        ctx.slots.register({ name: 'shell.overlay', id: 'session-cleaner-dialog', order: 300 }, SessionCleanerDialog),
+        ctx.slots.register({ name: 'shell.overlay', id: 'session-cleaner-dialog', order: 300, locale: NS }, SessionCleanerDialog),
       )
     }
 
-    return { inject: ['slots', 'sessions'], apply }
+    return { inject: ['slots', 'sessions', 'locale'], apply }
   },
 })
